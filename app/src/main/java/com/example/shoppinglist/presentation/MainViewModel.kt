@@ -24,7 +24,4 @@ class MainViewModel: ViewModel() {
         editShopItemUseCase.editShopItem(newItem)
     }
 
-    fun changeEnableState(shopItem: ShopItem) {
-
-    }
 }
