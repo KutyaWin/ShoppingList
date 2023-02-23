@@ -32,7 +32,7 @@ init{
 
     override fun editShopItem(shopItem: ShopItem) {
         val oldElement = getShopItem(shopItem.id)
-        set.remove(oldElement)
+        removeShopItem(oldElement)
         addShopItem(shopItem)
     }
 
