@@ -13,9 +13,9 @@ import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-    private lateinit var viewModel: ShopItemViewModel
+ /* private lateinit var viewModel: ShopItemViewModel
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -23,18 +23,41 @@ class ShopItemActivity : AppCompatActivity() {
     private lateinit var etCount: EditText
     private lateinit var buttonSave: Button
 
-    private var modeScreen = MODE_UNKNOWN
+
+
+*/
+     private var modeScreen = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
+        if(savedInstanceState==null){
+            launchRightMode()
+        }
+
+    }
+
+    override fun onEditingFinished() {
+        finish()
+    }
+    private fun launchRightMode() {
+        val fragment= when(modeScreen){
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            else -> throw RuntimeException("Unknown mode $modeScreen")
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shop_item_container,fragment )
+            .commit()
+    }
+
+
+       /*
         viewModel =ViewModelProvider(this)[ShopItemViewModel::class.java]
         initViews()
         addTextChangeList()
-        launchRightMode()
+
         observeViewModel()
 
     }
@@ -63,12 +86,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchRightMode() {
-        when (modeScreen) {
-            MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
-        }
-    }
+
 
     private fun launchEditMode(){
       viewModel.getShopItem(shopItemId)
@@ -96,7 +114,7 @@ class ShopItemActivity : AppCompatActivity() {
         etName = findViewById(R.id.et_name)
         etCount = findViewById(R.id.et_count)
         buttonSave = findViewById(R.id.save_button)
-    }
+    }*/
 
     companion object {
         private const val MODE_UNKNOWN = ""
@@ -104,6 +122,7 @@ class ShopItemActivity : AppCompatActivity() {
         private const val EXTRA_MODE = "extra_mode"
         private const val MODE_ADD = "mode_add"
         private const val MODE_EDIT = "mode_edit"
+
 
         fun newIntentAddItem(context: Context): Intent {
             val intent = Intent(context, ShopItemActivity::class.java)
@@ -117,7 +136,9 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_MODE_ID,  shopItemId)
             return intent
         }
+
     }
+
     private fun parseIntent(){
         if(!intent.hasExtra(EXTRA_MODE)){
             throw RuntimeException("Param mode is absent")
@@ -135,6 +156,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
     }
+    /*
     private fun addTextChangeList(){
 
         etName.addTextChangedListener(object: TextWatcher{
@@ -164,5 +186,5 @@ class ShopItemActivity : AppCompatActivity() {
 
             }
         })
-    }
+    }*/
 }
