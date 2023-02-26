@@ -73,6 +73,7 @@ class ShopItemViewModel: ViewModel() {
             _errorInputCount.value = true
             result = false
         }
+
         if(name.isBlank()){
             _errorInputName.value = true
             result = false
