@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+        <variable
+            name="shopItem"
+            type="com.example.shoppinglist.domain.ShopItem" />
+    </data>
+
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,6 +21,7 @@
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +31,7 @@
 
         <TextView
             android:id="@+id/tv_name"
+            android:text="@{shopItem.name}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -31,6 +42,7 @@
 
         <TextView
             android:id="@+id/tv_count"
+            android:text="@{String.valueOf(shopItem.count)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -41,3 +53,5 @@
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
+
+</layout>
