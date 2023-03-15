@@ -1,49 +1,37 @@
 package com.example.shoppinglist.data
-
+import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
-import kotlin.RuntimeException
-import kotlin.random.Random
 
-object ShopListRepositoryImpl: ShopListRepository {
-    private val set = sortedSetOf<ShopItem>({a,b->a.id.compareTo(b.id)})
-    private val listLD = MutableLiveData<List<ShopItem>>()
-    private var autoIncrementId =0
-init{
-    for(i in 0 until 100){
-        val item =ShopItem(i,"Shop$i", true)
-        addShopItem(item)
-    }
-}
+
+class ShopListRepositoryImpl(
+    application: Application
+): ShopListRepository{
+    private val shopListDao = AppDataBase.getInstance(application).shopListDao()
+    private val mapper = ShopListMapper()
+   override fun addShopItem(shopItem: ShopItem){
+        shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
+   }
+
     override fun removeShopItem(shopItem: ShopItem) {
-      set.remove(shopItem)
-        updateList()
+     shopListDao.deleteShopItem(shopItem.id)
     }
 
-    override fun getShopList(): LiveData<List<ShopItem>> {
-        return listLD
+    override fun getShopList(): LiveData<List<ShopItem>> = MediatorLiveData<List<ShopItem>>().apply{
+            addSource(shopListDao.getShopList()){
+                value = mapper.mapListDbModelToEntity(it)
+            }
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
-        return set.find {it.id==shopItemId}?:throw RuntimeException("Element with id $shopItemId not found!")
+       val dbModel = shopListDao.getShopItem(shopItemId)
+        return mapper.mapDbModelToEntity(dbModel)
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        val oldElement = getShopItem(shopItem.id)
-        removeShopItem(oldElement)
-        addShopItem(shopItem)
+        shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
     }
 
-    override fun addShopItem(shopItem: ShopItem) {
-        if(shopItem.id == ShopItem.UNDEFINED_ID){
-        shopItem.id  = autoIncrementId++
-            }
-        set.add(shopItem)
-        updateList()
-    }
-      fun updateList(){
-          listLD.value = set.toList()
-      }
 }
