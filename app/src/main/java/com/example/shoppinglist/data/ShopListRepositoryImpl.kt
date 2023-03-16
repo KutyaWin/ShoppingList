@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
 import kotlin.RuntimeException
-import kotlin.random.Random
+
 
 object ShopListRepositoryImpl: ShopListRepository {
     private val set = sortedSetOf<ShopItem>({a,b->a.id.compareTo(b.id)})
