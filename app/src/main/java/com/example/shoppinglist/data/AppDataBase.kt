@@ -17,26 +17,26 @@ abstract class AppDataBase: RoomDatabase() {
         private const val DB_NAME = "shop_item.db"
 
         fun getInstance(application: Application): AppDataBase{
-             var dataBase: AppDataBase
+
 
             INSTANCE?.let{
-                dataBase = it
+                return it
             }
 
             synchronized(LOCK){
                 INSTANCE?.let {
-                    dataBase = it
+                    return it
                 }
 
-                 dataBase = Room.databaseBuilder(
+                 val db = Room.databaseBuilder(
                     application,
                  AppDataBase::class.java,
                     DB_NAME
                 ).allowMainThreadQueries()
                      .build()
 
-                INSTANCE= dataBase
-                return dataBase
+                INSTANCE = db
+                return db
             }
 
         }
